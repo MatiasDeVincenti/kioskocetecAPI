@@ -73,6 +73,22 @@ def categorias():
     db.close()
     return jsonify(result)
 
+@app.route("signup", methods=("POST"),)
+def agregarUsuario():
+    db = mysql.connector.connect(**config)
+    cursor = db.cursor(dictionary=True)
+    nombre = request.json["nombre"]
+    apellido = request.json["apellido"]
+    curso = request.json["curso"]
+    dirección = request.json["dirección"]
+    Num_direccion = request.json["Num_direccion"]
+
+    consulta = """INSERT INTO Usuario (Nombre , Apellido , Curso , Dirección , Num_direccion )
+    VALUES (%s, %s, %s, %s, %s)"""
+    cursor.execute(consulta, (nombre, apellido, curso, dirección, Num_direccion))
+
+    db.commit()
+
 @app.route("/marcas")
 def marcas():
     db = mysql.connector.connect(**config)
