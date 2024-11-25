@@ -58,8 +58,8 @@ def paginado():
     return jsonify(result)
 
 
-@app.route("/categorias")
-def categorias():
+@app.route("/api/categorias")
+def categoriasAPI():
     db = mysql.connector.connect(**config)
     cursor = db.cursor(dictionary=True)
     cursor.execute("SET SESSION sql_mode='NO_ENGINE_SUBSTITUTION'")
@@ -70,6 +70,17 @@ def categorias():
     db.close()
     return jsonify(result)
 
+@app.route("/categorias")
+def categorias():
+    db = mysql.connector.connect(**config)
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SET SESSION sql_mode='NO_ENGINE_SUBSTITUTION'")
+    query = "SELECT * FROM Categorias"
+    cursor.execute(query)
+    result = cursor.fetchall()
+    cursor.close()
+    db.close()
+    return render_template('lista_categorias.html', categorias=result)
 
 @app.route("/signup", methods=["POST"])  # Fix the missing '/'
 def agregarUsuario():
