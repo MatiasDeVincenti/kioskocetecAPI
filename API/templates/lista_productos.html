@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<title>Kiosco Cetec</title>
+<nav>
+  <h1>Kiosco Cetec</h1>
+</nav>
+<section class="content">
+  <h1>Productos</h1>
+
+  <ul>
+    {% for producto in productos %}
+    <li>{{ producto['Nombre'] }}</li>
+    {% endfor %}
+  </ul>
+</section>

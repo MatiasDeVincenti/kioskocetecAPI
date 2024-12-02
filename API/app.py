@@ -1,8 +1,9 @@
-from flask import Flask, jsonify, request, render_template, redirect, url_for, flash
+from flask import Flask, jsonify, request, render_template, redirect, url_for, flash , Blueprint
 import mysql.connector
 from mysql.connector import Error
 from flask_cors import CORS  # Import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
+
 
 # Configuración de la conexión
 config = {
@@ -20,7 +21,7 @@ CORS(app, resources={r"/login": {"origins": "http://localhost:3000"}})
 app.config["JSON_AS_ASCII"] = False
 
 
-@app.route("/productos")
+@app.route("/api/productos")
 def paginado():
     Paginado = None
     # Conexión a la base de datos
@@ -111,7 +112,7 @@ def agregarUsuario():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route("/marcas")
+@app.route("/api/marcas")
 def marcas():
     db = mysql.connector.connect(**config)
     cursor = db.cursor(dictionary=True)
@@ -123,6 +124,29 @@ def marcas():
     db.close()
     return jsonify(result)
 
+@app.route("/marca")
+def marca():
+    db = mysql.connector.connect(**config)
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SET SESSION sql_mode='NO_ENGINE_SUBSTITUTION'")
+    query = "SELECT * FROM Marcas"
+    cursor.execute(query)
+    result = cursor.fetchall()
+    cursor.close()
+    db.close()
+    return render_template('lista_marcas.html', marcas=result)
+
+@app.route("/productos")
+def producto():
+    db = mysql.connector.connect(**config)
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SET SESSION sql_mode='NO_ENGINE_SUBSTITUTION'")
+    query = "SELECT * FROM Productos"
+    cursor.execute(query)
+    result = cursor.fetchall()
+    cursor.close()
+    db.close()
+    return render_template('lista_productos.html', productos=result)
 
 # Para insertar producto
 @app.route("/AñadirProducto", methods=["PUT"])
