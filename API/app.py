@@ -71,7 +71,7 @@ def categoriasAPI():
     db.close()
     return jsonify(result)
 
-@app.route("/categorias")
+@app.route("/categoria")
 def categorias():
     db = mysql.connector.connect(**config)
     cursor = db.cursor(dictionary=True)
@@ -82,6 +82,24 @@ def categorias():
     cursor.close()
     db.close()
     return render_template('lista_categorias.html', categorias=result)
+
+@app.route("/categoria/<int:id>")
+def detalle_categoria(id):
+    db = mysql.connector.connect(**config)
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SET SESSION sql_mode='NO_ENGINE_SUBSTITUTION'")
+
+    query = "SELECT Nombre FROM Categorias WHERE Id = %s"
+    cursor.execute(query, (id,))
+    categoria = cursor.fetchone()
+
+    query = "SELECT * FROM Productos WHERE Id_categoria = %s"
+    cursor.execute(query, (id,))
+    productos = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+    return render_template('detalle_categoria.html', categoria=categoria, productos=productos)
 
 @app.route("/signup", methods=["POST"])  # Fix the missing '/'
 def agregarUsuario():
@@ -136,7 +154,7 @@ def marca():
     db.close()
     return render_template('lista_marcas.html', marcas=result)
 
-@app.route("/productos")
+@app.route("/producto")
 def producto():
     db = mysql.connector.connect(**config)
     cursor = db.cursor(dictionary=True)
