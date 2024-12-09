@@ -8,7 +8,10 @@
 
   <ul>
     {% for marca in marcas %}
-    <li>{{ marca['Nombre'] }}</li>
+    <li> 
+      <a href="{{url_for('detalle_marca', id=marca['Id'])}}">{{ marca['Nombre'] }}</a>
+
+      </li>
     {% endfor %}
   </ul>
 </section>

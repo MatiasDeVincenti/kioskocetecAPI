@@ -101,6 +101,25 @@ def detalle_categoria(id):
     db.close()
     return render_template('detalle_categoria.html', categoria=categoria, productos=productos)
 
+@app.route("/marca/<int:id>")
+def detalle_marca(id):
+    db = mysql.connector.connect(**config)
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SET SESSION sql_mode='NO_ENGINE_SUBSTITUTION'")
+
+    query = "SELECT Nombre FROM Marcas WHERE Id = %s"
+    cursor.execute(query, (id,))
+    marca = cursor.fetchone()
+
+    query = "SELECT * FROM Productos WHERE Id_marca = %s"
+    cursor.execute(query, (id,))
+    productos = cursor.fetchall()
+
+    cursor.close()
+    db.close()
+    return render_template('detalle_marca.html', marca=marca, productos=productos)
+
+
 @app.route("/signup", methods=["POST"])  # Fix the missing '/'
 def agregarUsuario():
     db = mysql.connector.connect(**config)
