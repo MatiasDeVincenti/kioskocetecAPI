@@ -190,15 +190,17 @@ def detalle_producto(id):
     db = mysql.connector.connect(**config)
     cursor = db.cursor(dictionary=True)
     cursor.execute("SET SESSION sql_mode='NO_ENGINE_SUBSTITUTION'")
-    query = "SELECT Nombre FROM Productos WHERE Id = %s"
+    query = """SELECT Productos.Nombre, Marcas.Nombre AS Marca, 
+            Categorias.Nombre AS Categoria
+            FROM Productos 
+            JOIN Marcas ON Marcas.Id = Productos.Id_marca
+            JOIN Categorias ON Categorias.Id = Productos.Id_categoria WHERE Productos.Id = %s"""
     cursor.execute(query, (id,))
-    marca = cursor.fetchone()
-    query = "SELECT * FROM Productos WHERE Id_marca = %s"
-    cursor.execute(query, (id,))
-    productos = cursor.fetchall()
+    producto = cursor.fetchone()
     cursor.close()
     db.close()
-    return render_template('detalle_producto.html', marca=marca, productos=productos)
+    print(producto)
+    return render_template('detalle_producto.html', producto=producto)
 
 # Para insertar producto
 @app.route("/AñadirProducto", methods=["PUT"])
