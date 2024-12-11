@@ -185,6 +185,21 @@ def producto():
     db.close()
     return render_template('lista_productos.html', productos=result)
 
+@app.route("/producto/<int:id>")
+def detalle_producto(id):
+    db = mysql.connector.connect(**config)
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SET SESSION sql_mode='NO_ENGINE_SUBSTITUTION'")
+    query = "SELECT Nombre FROM Productos WHERE Id = %s"
+    cursor.execute(query, (id,))
+    marca = cursor.fetchone()
+    query = "SELECT * FROM Productos WHERE Id_marca = %s"
+    cursor.execute(query, (id,))
+    productos = cursor.fetchall()
+    cursor.close()
+    db.close()
+    return render_template('detalle_producto.html', marca=marca, productos=productos)
+
 # Para insertar producto
 @app.route("/AñadirProducto", methods=["PUT"])
 def insertar_producto():

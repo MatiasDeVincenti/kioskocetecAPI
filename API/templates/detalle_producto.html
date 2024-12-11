@@ -4,13 +4,10 @@
   <h1>Kiosco Cetec</h1>
 </nav>
 <section class="content">
-  <h1>Productos</h1>
-
+  <h1>{{ producto['Nombre'] }}</h1>
   <ul>
     {% for producto in productos %}
-    <li> 
-      <a href="{{url_for('detalle_producto', id=producto['Id'])}}">{{ producto['Nombre'] }}</a>
-      </li>
+    <li>{{ producto['Nombre'] }}</li>
     {% endfor %}
   </ul>
 </section>
