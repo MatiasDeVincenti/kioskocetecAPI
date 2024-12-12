@@ -185,13 +185,13 @@ def producto():
     db.close()
     return render_template('lista_productos.html', productos=result)
 
-@app.route("/producto/<int:id>")
+@app.route("/det_producto/<int:id>")
 def detalle_producto(id):
     db = mysql.connector.connect(**config)
     cursor = db.cursor(dictionary=True)
     cursor.execute("SET SESSION sql_mode='NO_ENGINE_SUBSTITUTION'")
     query = """SELECT Productos.Nombre, Marcas.Nombre AS Marca, 
-            Categorias.Nombre AS Categoria
+            Categorias.Nombre AS Categoria, Productos.Img AS Imagen, Productos.Precio_venta AS Precio
             FROM Productos 
             JOIN Marcas ON Marcas.Id = Productos.Id_marca
             JOIN Categorias ON Categorias.Id = Productos.Id_categoria WHERE Productos.Id = %s"""
